@@ -75,8 +75,9 @@ end
 
 -- Parse ATX-style headings (# Heading)
 local function parse_atx_heading(line)
-  local hashes, text = line:match("^(#{1,6})%s+(.+)$")
-  if hashes and text then
+  -- Match: 1-6 hashes, optional space, then text (strip trailing whitespace)
+  local hashes, text = line:match("^(#{1,6})%s*(.-)%s*$")
+  if hashes and text and text ~= "" then
     -- Remove trailing hashes if present
     text = text:gsub("%s*#+%s*$", "")
     return #hashes, text
