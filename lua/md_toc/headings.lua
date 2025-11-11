@@ -11,7 +11,7 @@ local function is_in_code_block(line_num, code_blocks)
   return false
 end
 
--- Find all code blocks in the buffer
+-- Find all code blocks and YAML frontmatter in the buffer
 local function find_code_blocks(lines)
   local code_blocks = {}
   local in_block = false
@@ -19,8 +19,13 @@ local function find_code_blocks(lines)
   local fence_pattern = nil
 
   for i, line in ipairs(lines) do
+    -- Check for YAML frontmatter (--- at start of file)
+    if i == 1 and line:match("^%-%-%-+%s*$") then
+      in_block = true
+      block_start = i
+      fence_pattern = "yaml"
     -- Check for code fence start (``` or ~~~)
-    if not in_block then
+    elseif not in_block then
       if line:match("^```") then
         in_block = true
         block_start = i
@@ -36,7 +41,12 @@ local function find_code_blocks(lines)
       end
     else
       -- Check for code fence end
-      if fence_pattern == "```" and line:match("^```") then
+      if fence_pattern == "yaml" and line:match("^%-%-%-+%s*$") then
+        table.insert(code_blocks, { start_line = block_start, end_line = i })
+        in_block = false
+        block_start = nil
+        fence_pattern = nil
+      elseif fence_pattern == "```" and line:match("^```") then
         table.insert(code_blocks, { start_line = block_start, end_line = i })
         in_block = false
         block_start = nil
