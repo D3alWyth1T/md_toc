@@ -84,12 +84,30 @@ The plugin will generate a TOC like this:
 ```markdown
 <!-- md_toc GFM -->
 
-* [Introduction](#introduction)
-* [Getting Started](#getting-started)
+* [md_toc](#md_toc)
+    * [Features](#features)
     * [Installation](#installation)
+        * [Using Packer](#using-packer)
+        * [Using lazy.nvim](#using-lazynvim)
+        * [Using vim-plug](#using-vim-plug)
+    * [Usage](#usage)
+        * [Commands](#commands)
+        * [Example Workflow](#example-workflow)
+        * [Auto-Update](#auto-update)
+        * [Telescope Navigation](#telescope-navigation)
     * [Configuration](#configuration)
-* [Advanced Usage](#advanced-usage)
-    * [Custom Styles](#custom-styles)
+        * [Complete Configuration Example](#complete-configuration-example)
+        * [Markdown Styles](#markdown-styles)
+    * [Telekasten Integration](#telekasten-integration)
+        * [Recommended Telekasten Configuration](#recommended-telekasten-configuration)
+    * [Advanced Usage](#advanced-usage)
+        * [Programmatic API](#programmatic-api)
+        * [Custom Keybindings](#custom-keybindings)
+    * [Comparison with vim-markdown-toc](#comparison-with-vim-markdown-toc)
+    * [Requirements](#requirements)
+    * [License](#license)
+    * [Contributing](#contributing)
+    * [Acknowledgments](#acknowledgments)
 
 <!-- md_toc -->
 ```
@@ -186,9 +204,10 @@ require('md_toc').setup({
   telekasten_integration = true,
 })
 
--- Optional: Add keybindings
-vim.keymap.set('n', '<leader>zt', '<cmd>MdTocGenerate<cr>', { desc = 'Generate TOC' })
+-- Recommended keybindings for Telekasten workflow
+vim.keymap.set('n', '<leader>zc', '<cmd>MdTocGenerate<cr>', { desc = 'Generate TOC' })
 vim.keymap.set('n', '<leader>zu', '<cmd>MdTocUpdate<cr>', { desc = 'Update TOC' })
+vim.keymap.set('n', '<leader>zh', '<cmd>MdTocGoto<cr>', { desc = 'Jump to heading' })
 ```
 
 ## Advanced Usage
@@ -219,14 +238,30 @@ local anchor = md_toc.anchors.generate("My Heading", "gfm", {})
 
 ### Custom Keybindings
 
+**Standalone usage (without Telekasten):**
+
 ```lua
--- Basic bindings
+-- Basic TOC operations
 vim.keymap.set('n', '<leader>tg', '<cmd>MdTocGenerate<cr>', { desc = 'Generate TOC' })
 vim.keymap.set('n', '<leader>tu', '<cmd>MdTocUpdate<cr>', { desc = 'Update TOC' })
 vim.keymap.set('n', '<leader>tr', '<cmd>MdTocRemove<cr>', { desc = 'Remove TOC' })
-vim.keymap.set('n', '<leader>tn', '<cmd>MdTocNav<cr>', { desc = 'Navigate TOC' })
+vim.keymap.set('n', '<leader>th', '<cmd>MdTocGoto<cr>', { desc = 'Jump to heading' })
+vim.keymap.set('n', '<leader>tn', '<cmd>MdTocNav<cr>', { desc = 'Navigate TOC with Telescope' })
+```
 
--- Quick jump from TOC entry
+**With Telekasten (recommended for Telekasten users):**
+
+```lua
+-- Telekasten-style keybindings
+vim.keymap.set('n', '<leader>nc', '<cmd>MdTocGenerate<cr>', { desc = 'Generate TOC' })
+vim.keymap.set('n', '<leader>nu', '<cmd>MdTocUpdate<cr>', { desc = 'Update TOC' })
+vim.keymap.set('n', '<leader>nh', '<cmd>MdTocGoto<cr>', { desc = 'Jump to heading' })
+```
+
+**Advanced: Override `gf` to handle TOC links:**
+
+```lua
+-- Make gf work with TOC entries (falls back to normal gf for other links)
 vim.keymap.set('n', 'gf', function()
   local line = vim.api.nvim_get_current_line()
   if line:match('%[.-%]%(#.-%)') then
@@ -263,5 +298,4 @@ Contributions welcome! Please feel free to submit issues or pull requests.
 
 ## Acknowledgments
 
-- Inspired by [vim-markdown-toc](https://github.com/mzlogin/vim-markdown-toc)
 - Designed to complement [Telekasten](https://github.com/nvim-telekasten/telekasten.nvim)
