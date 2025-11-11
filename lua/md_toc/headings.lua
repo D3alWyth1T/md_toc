@@ -112,6 +112,15 @@ function M.extract_headings(bufnr, config)
 
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local code_blocks = find_code_blocks(lines)
+
+  -- Debug: print code blocks
+  if vim.g.md_toc_debug then
+    print("Code blocks found:")
+    for _, block in ipairs(code_blocks) do
+      print(string.format("  Lines %d-%d", block.start_line, block.end_line))
+    end
+  end
+
   local headings = {}
 
   local i = 1
@@ -122,6 +131,10 @@ function M.extract_headings(bufnr, config)
     if not is_in_code_block(i, code_blocks) then
       -- Try ATX-style heading
       local level, text = parse_atx_heading(line)
+
+      if vim.g.md_toc_debug and line:match("^##") then
+        print(string.format("Line %d: '%s' -> level=%s, text='%s'", i, line, tostring(level), tostring(text)))
+      end
 
       -- If not ATX, try Setext-style
       if not level and i < #lines then
@@ -143,6 +156,10 @@ function M.extract_headings(bufnr, config)
     end
 
     i = i + 1
+  end
+
+  if vim.g.md_toc_debug then
+    print(string.format("Total headings found: %d", #headings))
   end
 
   return headings
