@@ -44,9 +44,11 @@ function M.generate_gfm(heading_text, existing_anchors)
 
   -- Remove special characters, keeping alphanumeric, spaces, hyphens, underscores, and extended chars
   local cleaned = {}
-  for char in anchor:gmatch(vim.regex("\\Z"):type() == "number" and "." or "[%z\1-\127\194-\244][\128-\191]*") do
-    if is_alnum(char) or is_extended(char) or char == " " or char == "-" or char == "_" then
-      table.insert(cleaned, char)
+  -- Use UTF-8 pattern to iterate over characters
+  for _, char in utf8.codes(anchor) do
+    local c = utf8.char(char)
+    if is_alnum(c) or is_extended(c) or c == " " or c == "-" or c == "_" then
+      table.insert(cleaned, c)
     end
   end
   anchor = table.concat(cleaned, "")
@@ -81,9 +83,11 @@ function M.generate_gitlab(heading_text, existing_anchors)
 
   -- Remove special characters
   local cleaned = {}
-  for char in anchor:gmatch(vim.regex("\\Z"):type() == "number" and "." or "[%z\1-\127\194-\244][\128-\191]*") do
-    if is_alnum(char) or is_extended(char) or char == " " or char == "-" or char == "_" then
-      table.insert(cleaned, char)
+  -- Use UTF-8 pattern to iterate over characters
+  for _, char in utf8.codes(anchor) do
+    local c = utf8.char(char)
+    if is_alnum(c) or is_extended(c) or c == " " or c == "-" or c == "_" then
+      table.insert(cleaned, c)
     end
   end
   anchor = table.concat(cleaned, "")
@@ -131,13 +135,15 @@ function M.generate_redcarpet(heading_text, existing_anchors)
 
   -- Replace non-alphanumeric with hyphens (except extended chars)
   local cleaned = {}
-  for char in anchor:gmatch(vim.regex("\\Z"):type() == "number" and "." or "[%z\1-\127\194-\244][\128-\191]*") do
-    if is_alnum(char) or is_extended(char) then
-      table.insert(cleaned, char)
-    elseif char == " " or char:match("[^%w]") then
+  -- Use UTF-8 pattern to iterate over characters
+  for _, char in utf8.codes(anchor) do
+    local c = utf8.char(char)
+    if is_alnum(c) or is_extended(c) then
+      table.insert(cleaned, c)
+    elseif c == " " or c:match("[^%w]") then
       table.insert(cleaned, "-")
     else
-      table.insert(cleaned, char)
+      table.insert(cleaned, c)
     end
   end
   anchor = table.concat(cleaned, "")
@@ -174,10 +180,12 @@ function M.generate_marked(heading_text, existing_anchors)
 
   -- Replace spaces with hyphens and remove most special chars
   local cleaned = {}
-  for char in anchor:gmatch(vim.regex("\\Z"):type() == "number" and "." or "[%z\1-\127\194-\244][\128-\191]*") do
-    if is_alnum(char) or is_extended(char) or char == "-" then
-      table.insert(cleaned, char)
-    elseif char == " " then
+  -- Use UTF-8 pattern to iterate over characters
+  for _, char in utf8.codes(anchor) do
+    local c = utf8.char(char)
+    if is_alnum(c) or is_extended(c) or c == "-" then
+      table.insert(cleaned, c)
+    elseif c == " " then
       table.insert(cleaned, "-")
     end
   end
