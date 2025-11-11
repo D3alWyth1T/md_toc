@@ -76,8 +76,9 @@ end
 -- Parse ATX-style headings (# Heading)
 local function parse_atx_heading(line)
   -- Match: 1-6 hashes, optional space, then text
-  local hashes, text = line:match("^(#{1,6})%s*(.+)$")
-  if hashes and text then
+  -- Note: Lua patterns don't support {n,m}, so we use + and validate length
+  local hashes, text = line:match("^(#+)%s*(.+)$")
+  if hashes and text and #hashes >= 1 and #hashes <= 6 then
     -- Trim trailing whitespace and hashes
     text = text:gsub("%s*#+%s*$", ""):gsub("%s+$", "")
     if text ~= "" then
