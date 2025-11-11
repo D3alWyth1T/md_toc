@@ -70,7 +70,14 @@ end
 function M.is_markdown_buffer(bufnr)
   bufnr = bufnr or 0
   local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-  return filetype == "markdown" or filetype == "md"
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+
+  -- Check filetype or file extension
+  return filetype == "markdown"
+    or filetype == "md"
+    or filetype == "telekasten"
+    or filename:match("%.md$")
+    or filename:match("%.markdown$")
 end
 
 -- Get buffer lines in a range (1-indexed, inclusive)
