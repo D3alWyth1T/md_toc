@@ -23,7 +23,7 @@ A Neovim plugin for generating and managing table of contents in markdown files.
 
 ```lua
 use {
-  'd3al/md_toc',
+  'D3alWyth1T/md_toc',
   config = function()
     require('md_toc').setup({
       -- Optional configuration (these are the defaults)
@@ -45,7 +45,7 @@ use {
 
 ```lua
 {
-  'd3al/md_toc',
+  'D3alWyth1T/md_toc',
   ft = 'markdown',
   config = function()
     require('md_toc').setup()
@@ -56,7 +56,7 @@ use {
 ### Using vim-plug
 
 ```vim
-Plug 'd3al/md_toc'
+Plug 'D3alWyth1T/md_toc'
 
 lua << EOF
 require('md_toc').setup()

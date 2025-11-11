@@ -1,4 +1,5 @@
 " md_toc.vim - Vim plugin entry point for md_toc
+" Version: 1.0.0
 " Maintainer: D3al
 " License: MIT
 

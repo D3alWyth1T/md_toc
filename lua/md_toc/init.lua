@@ -7,6 +7,9 @@ local utils = require("md_toc.utils")
 
 local M = {}
 
+-- Plugin version
+M.version = "1.0.0"
+
 -- Setup function
 function M.setup(user_config)
   -- Setup configuration
