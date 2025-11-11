@@ -44,9 +44,9 @@ function M.generate_gfm(heading_text, existing_anchors)
 
   -- Remove special characters, keeping alphanumeric, spaces, hyphens, underscores, and extended chars
   local cleaned = {}
-  -- Use UTF-8 pattern to iterate over characters
-  for _, char in utf8.codes(anchor) do
-    local c = utf8.char(char)
+  -- Iterate over each byte/character
+  for i = 1, #anchor do
+    local c = anchor:sub(i, i)
     if is_alnum(c) or is_extended(c) or c == " " or c == "-" or c == "_" then
       table.insert(cleaned, c)
     end
@@ -83,9 +83,9 @@ function M.generate_gitlab(heading_text, existing_anchors)
 
   -- Remove special characters
   local cleaned = {}
-  -- Use UTF-8 pattern to iterate over characters
-  for _, char in utf8.codes(anchor) do
-    local c = utf8.char(char)
+  -- Iterate over each byte/character
+  for i = 1, #anchor do
+    local c = anchor:sub(i, i)
     if is_alnum(c) or is_extended(c) or c == " " or c == "-" or c == "_" then
       table.insert(cleaned, c)
     end
@@ -135,9 +135,9 @@ function M.generate_redcarpet(heading_text, existing_anchors)
 
   -- Replace non-alphanumeric with hyphens (except extended chars)
   local cleaned = {}
-  -- Use UTF-8 pattern to iterate over characters
-  for _, char in utf8.codes(anchor) do
-    local c = utf8.char(char)
+  -- Iterate over each byte/character
+  for i = 1, #anchor do
+    local c = anchor:sub(i, i)
     if is_alnum(c) or is_extended(c) then
       table.insert(cleaned, c)
     elseif c == " " or c:match("[^%w]") then
@@ -180,9 +180,9 @@ function M.generate_marked(heading_text, existing_anchors)
 
   -- Replace spaces with hyphens and remove most special chars
   local cleaned = {}
-  -- Use UTF-8 pattern to iterate over characters
-  for _, char in utf8.codes(anchor) do
-    local c = utf8.char(char)
+  -- Iterate over each byte/character
+  for i = 1, #anchor do
+    local c = anchor:sub(i, i)
     if is_alnum(c) or is_extended(c) or c == "-" then
       table.insert(cleaned, c)
     elseif c == " " then
