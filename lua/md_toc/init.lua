@@ -148,13 +148,24 @@ function M.setup_telekasten_integration()
     return
   end
 
-  -- Add commands to Telekasten command palette if configured
+  -- Show integration message only once (after install/update)
   local cfg = config.get()
   if cfg.add_to_command_palette then
-    -- Note: Telekasten's command palette is managed through its own config
-    -- Users will need to add these to their Telekasten setup manually, or we can
-    -- provide a helper function they can call
-    vim.notify("md_toc: For Telekasten integration, add md_toc commands to your Telekasten config", vim.log.levels.INFO)
+    local cache_dir = vim.fn.stdpath("cache") .. "/md_toc"
+    local flag_file = cache_dir .. "/telekasten_msg_v" .. M.version
+
+    -- Check if we've shown the message for this version
+    if vim.fn.filereadable(flag_file) == 0 then
+      vim.notify("md_toc: For Telekasten integration, add md_toc commands to your keybindings (see README)", vim.log.levels.INFO)
+
+      -- Create cache dir and flag file
+      vim.fn.mkdir(cache_dir, "p")
+      local file = io.open(flag_file, "w")
+      if file then
+        file:write(M.version)
+        file:close()
+      end
+    end
   end
 end
 
